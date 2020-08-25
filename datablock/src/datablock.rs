@@ -95,4 +95,4 @@ where
 
 
 // Arraies
-unsafe_impl_array!(256);
+unsafe_impl_array!(1024);
