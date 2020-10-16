@@ -15,9 +15,9 @@ struct Foo<T> where {
 }
 
 fn main() {
-    let mut buf : [u8; 50] = [0; 50];
+    let mut buf: [u8; 50] = [0; 50];
 
-    let mut obj : [u32; 5] = [1, 2, 3, 4, 50];
+    let mut obj: [u32; 5] = [1, 2, 3, 4, 50];
     println!("{} {}", obj.len(), std::mem::size_of_val(&obj));
 
     let mut x = Foo::<u32> { a : 0xdead, b : obj[3]};
@@ -29,13 +29,18 @@ fn main() {
     println!("{} {}", std::mem::size_of_val(&x), r.unwrap_or(999999));
     print_buf(&buf);
 
-    let mut y : Foo::<u32> = Foo {a: 0, b: 0};
+    let mut y: Foo::<u32> = Foo {a: 0, b: 0};
     let _r = y.extract_from(&buf);
 
     for i in 0..obj.len() {
         print!("{} ", obj[i]);
     }
+    println!("");
 
-    println!("{:x} {:x} {:x}", y.a, y.b, y.b);
+    let r = Foo::<u32>::mut_ref_from(&mut buf);
+    let _ = r.map(|r| r.a = 66666);
+    println!("{:x} {:x} {}", y.a, y.b, buf[0]);
+    let _r = y.extract_from(&buf);
+    println!("{:x} {:x}", y.a, y.b);
     println!("done");
 }

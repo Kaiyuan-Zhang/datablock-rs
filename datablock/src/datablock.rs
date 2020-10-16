@@ -11,8 +11,8 @@ pub unsafe trait DataBlock : Sized {
             Err(Error::SizeError)
         } else {
             unsafe {
-                let dst_ptr : *mut u8 = self as *mut Self as *mut u8;
-                let src_ptr : *const u8 = slice.as_ptr();
+                let dst_ptr: *mut u8 = self as *mut Self as *mut u8;
+                let src_ptr: *const u8 = slice.as_ptr();
                 copy_nonoverlapping(src_ptr, dst_ptr, sz);
             }
             Ok(sz)
@@ -25,11 +25,35 @@ pub unsafe trait DataBlock : Sized {
             Err(Error::SizeError)
         } else {
             unsafe {
-                let dst_ptr : *mut u8 = slice.as_mut_ptr();
-                let src_ptr : *const u8 = self as *const Self as *const u8;
+                let dst_ptr: *mut u8 = slice.as_mut_ptr();
+                let src_ptr: *const u8 = self as *const Self as *const u8;
                 copy_nonoverlapping(src_ptr, dst_ptr, sz);
             }
             Ok(sz)
+        }
+    }
+
+    fn ref_from(slice: &[u8]) -> Result<&Self, Error> {
+        let sz = mem::size_of::<Self>();
+        if sz > slice.len() {
+            Err(Error::SizeError)
+        } else {
+            let ptr: *const u8 = slice.as_ptr();
+            unsafe {
+                Ok(&*(ptr as *const _))
+            }
+        }
+    }
+
+    fn mut_ref_from(slice: &mut [u8]) -> Result<&mut Self, Error> {
+        let sz = mem::size_of::<Self>();
+        if sz > slice.len() {
+            Err(Error::SizeError)
+        } else {
+            let ptr: *mut u8 = slice.as_mut_ptr();
+            unsafe {
+                Ok(&mut *(ptr as *mut _))
+            }
         }
     }
 }
