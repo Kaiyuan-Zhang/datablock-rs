@@ -2,6 +2,7 @@ use core::mem;
 use core::result::Result;
 use core::intrinsics::copy_nonoverlapping;
 
+#[derive(Debug)]
 pub enum Error { SizeError }
 
 pub unsafe trait DataBlock : Sized {
