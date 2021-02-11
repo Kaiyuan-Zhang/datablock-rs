@@ -34,6 +34,7 @@ pub unsafe trait DataBlock : Sized {
         }
     }
 
+    #[inline]
     fn ref_from(slice: &[u8]) -> Result<&Self, Error> {
         let sz = mem::size_of::<Self>();
         if sz > slice.len() {
@@ -46,6 +47,7 @@ pub unsafe trait DataBlock : Sized {
         }
     }
 
+    #[inline]
     fn mut_ref_from(slice: &mut [u8]) -> Result<&mut Self, Error> {
         let sz = mem::size_of::<Self>();
         if sz > slice.len() {
