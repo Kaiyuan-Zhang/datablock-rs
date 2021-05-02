@@ -75,6 +75,20 @@ pub unsafe trait DataBlock : Sized {
     }
 
     #[inline]
+    fn ref_from_mut_prefix(slice: &mut [u8]) -> Result<(&Self, &mut [u8]), Error> {
+        let sz = mem::size_of::<Self>();
+        if sz > slice.len() {
+            Err(Error::SizeError)
+        } else {
+            let (slice, rest) = slice.split_at_mut(sz);
+            let ptr: *const u8 = slice.as_ptr();
+            unsafe {
+                Ok((&*(ptr as *const _), rest))
+            }
+        }
+    }
+
+    #[inline]
     fn mut_ref_from_prefix(slice: &mut [u8]) -> Result<(&mut Self, &mut [u8]), Error> {
         let sz = mem::size_of::<Self>();
         if sz > slice.len() {
